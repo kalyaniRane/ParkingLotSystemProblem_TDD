@@ -17,25 +17,23 @@ public class ParkingLotTest {
         vehicle =new Object();
     }
 
-
     @Test
-    public void givenVehical_WhenParked_ShouldReturnTrue() {
-
+    public void givenVehicle_WhenParked_ShouldReturnTrue() {
         try {
             parkingLotSystem.park(vehicle);
-            boolean Isparked = parkingLotSystem.isVehicleParked(vehicle);
-            assertTrue(Isparked);
+            boolean isParked = parkingLotSystem.isVehicleParked(vehicle);
+            assertTrue(isParked);
         } catch (ParkingLotException e) {
         }
     }
 
     @Test
-    public void givenVechical_WhenAlReadyParked_ShouldReturnFalse() {
+    public void givenVehicle_WhenAlReadyParked_ShouldReturnFalse() {
         try {
             parkingLotSystem.park(vehicle);
-            parkingLotSystem.park(new Object());
+            parkingLotSystem.park(vehicle);
         } catch (ParkingLotException e) {
-            Assert.assertEquals("parkinglot is full", e.getMessage());
+            Assert.assertEquals("vehicle already parked", e.getMessage());
         }
     }
 
@@ -43,16 +41,16 @@ public class ParkingLotTest {
     public void givenVehicle_WhenUnParked_ShouldReturnTrue() {
         try {
             parkingLotSystem.park(vehicle);
-            boolean isUnparked = parkingLotSystem.unPark(vehicle);
-            Assert.assertTrue(isUnparked);
+            boolean isUnParked = parkingLotSystem.unPark(vehicle);
+            Assert.assertTrue(isUnParked);
         } catch (ParkingLotException e) {
         }
     }
 
     @Test
-    public void givenWhenParkingLotIsFull_ShoulInformTheOwner() {
+    public void givenWhenParkingLotIsFull_ShouldInformTheOwner() {
         ParkingLotOwner owner=new ParkingLotOwner();
-        parkingLotSystem.registerOwner(owner);
+        parkingLotSystem.registerParkingLotObserver(owner);
         try {
             parkingLotSystem.park(vehicle);
             parkingLotSystem.park(new Object());
@@ -63,18 +61,32 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void givenCapacityIs2_ShouldAbleToPark2Vechile() {
-        Object vehical2=new Object();
+    public void givenCapacityIs2_ShouldAbleToPark2Vehicle() {
+        Object vehicle2=new Object();
         parkingLotSystem.setCapacity(2);
         try {
             parkingLotSystem.park(vehicle);
-            parkingLotSystem.park(vehical2);
+            parkingLotSystem.park(vehicle2);
             boolean isParked1 = parkingLotSystem.isVehicleParked(vehicle);
-            boolean isParked2 = parkingLotSystem.isVehicleParked(vehical2);
+            boolean isParked2 = parkingLotSystem.isVehicleParked(vehicle2);
 
             Assert.assertTrue(isParked1 && isParked2);
         } catch (ParkingLotException e) {
 
         }
     }
+
+    @Test
+    public void givenWhenParkingLotIsFull_ShouldInformTheSecurity() {
+        AirportSecurity airportSecurity=new AirportSecurity();
+        parkingLotSystem.registerParkingLotObserver(airportSecurity);
+        try {
+            parkingLotSystem.park(vehicle);
+            parkingLotSystem.park(new Object());
+        } catch (ParkingLotException e) {
+            boolean capacityFull = airportSecurity.isCapacityFull();
+            Assert.assertTrue(capacityFull);
+        }
+    }
+
 }

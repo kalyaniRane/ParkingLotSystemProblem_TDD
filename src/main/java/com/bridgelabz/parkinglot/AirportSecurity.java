@@ -1,8 +1,9 @@
 package com.bridgelabz.parkinglot;
 
-public class ParkingLotOwner implements ParkingLotObserver{
+public class AirportSecurity implements ParkingLotObserver {
 
     public boolean isFullCapacity;
+
 
     @Override
     public void capacityIsFull() {
@@ -17,5 +18,4 @@ public class ParkingLotOwner implements ParkingLotObserver{
     public boolean isCapacityFull() {
         return this.isFullCapacity;
     }
-
 }
