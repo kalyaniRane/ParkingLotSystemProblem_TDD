@@ -34,7 +34,6 @@ public class ParkingLotSystem {
             }
             throw new ParkingLotException("parkinglot is full");
         }
-
         this.vehicles.add(vehicle);
     }
 

@@ -89,4 +89,19 @@ public class ParkingLotTest {
         }
     }
 
+    @Test
+    public void givenParkingLot_HasSpace_ShouldReturnFalse() {
+        Object vehicle2=new Object();
+        ParkingLotOwner owner=new ParkingLotOwner();
+        parkingLotSystem.registerParkingLotObserver(owner);
+        try {
+            parkingLotSystem.park(vehicle);
+            parkingLotSystem.park(vehicle2);
+        } catch (ParkingLotException e) {
+            parkingLotSystem.unPark(vehicle);
+            boolean capacityFull = owner.isCapacityFull();
+            Assert.assertFalse(capacityFull);
+        }
+    }
+
 }
