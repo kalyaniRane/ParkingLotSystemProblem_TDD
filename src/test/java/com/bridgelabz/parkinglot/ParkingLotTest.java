@@ -150,4 +150,27 @@ public class ParkingLotTest {
         assertTrue(vehiclePark);
     }
 
+    @Test
+    public void givenVehicle_WhenPresent_ShouldReturnSlot() {
+        parkingLotSystem.setCapacity(5);
+        parkingLotSystem.initializeParkingLot();
+        parkingLotSystem.parked(0,vehicle);
+        parkingLotSystem.parked(1,vehicle1);
+        int vehicleSlot = parkingLotSystem.findVehicle(this.vehicle);
+        Assert.assertEquals(0,vehicleSlot);
+    }
+
+    @Test
+    public void givenVehicle_WhenNotPresent_ShouldReturnException() {
+        try {
+            parkingLotSystem.setCapacity(5);
+            parkingLotSystem.initializeParkingLot();
+            parkingLotSystem.parked(0, vehicle);
+            parkingLotSystem.findVehicle(vehicle1);
+        }catch (ParkingLotException e){
+            Assert.assertEquals("Vehicle Not Present",e.getMessage());
+        }
+
+    }
+
 }

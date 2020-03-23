@@ -7,9 +7,7 @@ import java.util.stream.IntStream;
 public class ParkingLotSystem {
     private int actualCapacity;
     public List<Object> vehicles;
-    //private ParkingLotOwner owner;
     private List<ParkingLotObserver> observers;
-    //private AirportSecurity airportSecurity;
     private int slot=0;
 
 
@@ -51,7 +49,6 @@ public class ParkingLotSystem {
                 observer.capacityIsFull();
             throw new ParkingLotException("parkinglot is full");
         }
-        //this.vehicles.add(vehicle);
         parked(slot++, vehicle);
     }
 
@@ -76,4 +73,9 @@ public class ParkingLotSystem {
         return false;
     }
 
+    public int findVehicle(Object vehicle) {
+        if(!this.vehicles.contains(vehicle))
+            throw new ParkingLotException("Vehicle Not Present");
+        return this.vehicles.indexOf(vehicle);
+    }
 }
