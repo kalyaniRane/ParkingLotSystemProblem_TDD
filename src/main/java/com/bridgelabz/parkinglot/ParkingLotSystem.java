@@ -10,7 +10,8 @@ public class ParkingLotSystem {
     public int actualCapacity;
     public List<Vehicle> vehicles;
     private List<ParkingLotObserver> observers;
-
+    public enum DriverType{NORMAL,HANDICAP}
+    private DriverType driverType;
     public ParkingLotSystem(int capacity) {
         setCapacity(capacity);
         this.observers = new ArrayList<>();
@@ -45,7 +46,7 @@ public class ParkingLotSystem {
     }
 
     //Function To Park Vehicle In ParkingLot
-    public void park(Vehicle vehicle) throws ParkingLotException {
+    public void park(Vehicle vehicle,DriverType driverType) throws ParkingLotException {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("vehicle already parked");
 
@@ -54,9 +55,8 @@ public class ParkingLotSystem {
                 observer.capacityIsFull();
             throw new ParkingLotException("parkinglot is full");
         }
-            ArrayList<Integer> emptyParkingSlotList = getSlot();
-            Collections.sort(emptyParkingSlotList,Collections.reverseOrder());
-            parked(emptyParkingSlotList.get(0),vehicle);
+        ArrayList<Integer> emptyList = getEmptyList(driverType);
+        parked(emptyList.get(0),vehicle);
     }
 
     //Function To Park Vehicle With Given Slot
@@ -65,6 +65,15 @@ public class ParkingLotSystem {
             throw new ParkingLotException("vehicle already parked");
         }
         this.vehicles.set(slot, vehicle);
+    }
+
+    public ArrayList<Integer> getEmptyList(DriverType driverType){
+        ArrayList<Integer> emptyParkingSlotList = getSlot();
+        if(DriverType.NORMAL.equals(driverType))
+        Collections.sort(emptyParkingSlotList,Collections.reverseOrder());
+        if(DriverType.HANDICAP.equals(driverType))
+            Collections.sort(emptyParkingSlotList);
+        return emptyParkingSlotList;
     }
 
     //Function To Confirm Vehicle Is Parked or Not
