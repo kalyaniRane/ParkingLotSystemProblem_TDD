@@ -2,11 +2,12 @@ package com.bridgelabz.parkinglot;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
-    private int actualCapacity;
+    public int actualCapacity;
     public List<Vehicle> vehicles;
     private List<ParkingLotObserver> observers;
 
@@ -26,7 +27,7 @@ public class ParkingLotSystem {
         initializeParkingLot();
     }
 
-    //Function to Initialize Null Value At The Starting For Uderstanding ParkingLot is Empty
+    //Function to Initialize Null Value At The Starting For Understanding ParkingLot is Empty
     public int initializeParkingLot() {
         this.vehicles=new ArrayList<>();
         IntStream.range(0,this.actualCapacity).forEach(slots ->vehicles.add(null));
@@ -53,7 +54,17 @@ public class ParkingLotSystem {
                 observer.capacityIsFull();
             throw new ParkingLotException("parkinglot is full");
         }
-        this.vehicles.set(vehicle.getSlot(), vehicle);
+            ArrayList<Integer> emptyParkingSlotList = getSlot();
+            Collections.sort(emptyParkingSlotList,Collections.reverseOrder());
+            parked(emptyParkingSlotList.get(0),vehicle);
+    }
+
+    //Function To Park Vehicle With Given Slot
+    public void parked(int slot, Vehicle vehicle) throws ParkingLotException {
+        if (isVehicleParked(vehicle)) {
+            throw new ParkingLotException("vehicle already parked");
+        }
+        this.vehicles.set(slot, vehicle);
     }
 
     //Function To Confirm Vehicle Is Parked or Not

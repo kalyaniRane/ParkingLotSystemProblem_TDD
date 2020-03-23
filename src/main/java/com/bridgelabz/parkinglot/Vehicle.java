@@ -6,12 +6,6 @@ public class Vehicle {
 
 
     public LocalTime time;
-    public int slot;
-
-    public void setSlot(int slot)
-    {
-        this.slot=slot;
-    }
 
     public void setTime(){
         this.time=LocalTime.now();
@@ -21,7 +15,4 @@ public class Vehicle {
         return time;
     }
 
-    public int getSlot() {
-        return slot;
-    }
 }
