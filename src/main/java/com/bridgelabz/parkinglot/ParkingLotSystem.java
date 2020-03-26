@@ -10,8 +10,11 @@ public class ParkingLotSystem {
     public int actualCapacity;
     public List<Vehicle> vehicles;
     private List<ParkingLotObserver> observers;
-    public enum DriverType{NORMAL,HANDICAP}
-    private DriverType driverType;
+
+    public enum DriverType{
+        NORMAL,HANDICAP
+    }
+
     public ParkingLotSystem(int capacity) {
         setCapacity(capacity);
         this.observers = new ArrayList<>();
@@ -55,6 +58,10 @@ public class ParkingLotSystem {
                 observer.capacityIsFull();
             throw new ParkingLotException("parkinglot is full");
         }
+
+        for (ParkingLotObserver observer : observers)
+            observer.capacityIsAvailable();
+
         ArrayList<Integer> emptyList = getEmptyList(driverType);
         parked(emptyList.get(0),vehicle);
     }
