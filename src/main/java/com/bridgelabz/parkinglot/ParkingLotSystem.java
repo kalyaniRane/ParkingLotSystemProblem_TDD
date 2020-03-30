@@ -28,63 +28,47 @@ public class ParkingLotSystem {
     }
 
     public boolean isLotAdded(ParkingLot parkingLot) {
-        if (this.parkingLots.contains(parkingLot)) {
-            return true;
-        }
+        if (this.parkingLots.contains(parkingLot)) return true;
         return false;
     }
 
     public ArrayList<Integer> getEmptyLots() {
         ArrayList<Integer> emptyLots = new ArrayList<>();
-        for (int lots = 0; lots < this.lotCapacity; lots++) {
-            if (this.parkingLots.get(lots) == null)
-                emptyLots.add(lots);
-        }
+        IntStream.range(0,lotCapacity)
+                .filter(slot->parkingLots.get(slot)==null)
+                .forEach(emptyLots::add);
         return emptyLots;
     }
 
-    public boolean parkedVehicle(Object vehicle, ParkingLot.DriverType driverType) {
+    public boolean parkedVehicle(Object vehicle,DriverType driverType) {
         for(ParkingLot parkingLot : parkingLots){
-                parkingLot.park(vehicle, driverType);
-            if (parkingLot.isVehicleParked(vehicle))
-                break;
-            return true;
+            return parkingLot.park(vehicle, driverType);
         }
         return false;
     }
 
     public boolean unParkedVehicle(Object vehicle) {
-        for (int parkingLot = 0; parkingLot < this.parkingLots.size(); parkingLot++) {
-            if (this.parkingLots.get(parkingLot).unPark(vehicle)) {
-                return true;
-            }
+        for (ParkingLot parkingLot :parkingLots) {
+            return parkingLot.unPark(vehicle);
         }
         return false;
     }
 
     public boolean isVehicleParked(Object vehicle) {
         for(ParkingLot parkingLot: parkingLots)
-        {
-            if(parkingLot.isVehicleParked(vehicle))
-                return true;
-        }
+            return parkingLot.isVehicleParked(vehicle);
         return false;
     }
 
     public int findVehicle(Object vehicle) {
         for(ParkingLot parkingLot: parkingLots)
-        {
             return parkingLot.findVehicle(vehicle);
-        }
         throw new ParkingLotException("Vehicle Not Present", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
     }
 
     public LocalTime getVehicleParkedTime(Object vehicle) {
         for(ParkingLot parkingLot: parkingLots)
-        {
             return parkingLot.getVehicleParkedTime(vehicle);
-        }
-        return null;
+        throw new ParkingLotException("Time Not Available", ParkingLotException.ExceptionType.TIME_NOT_AVAILABLE);
     }
 }
-

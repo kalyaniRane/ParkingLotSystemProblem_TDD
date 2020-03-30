@@ -5,9 +5,15 @@ import java.util.List;
 
 public class ParkingLotInformer {
 
-    private static List<ParkingLotObserver> observers=new ArrayList<>();
+    List<ParkingLotObserver> observers=new ArrayList<>();
+    static ParkingLotInformer instance;
 
-    //Function to register Observers in List For ParkingLot
+    public static ParkingLotInformer getInstance(){
+        if(instance == null)
+            instance = new ParkingLotInformer();
+        return instance;
+    }
+
     public void registerParkingLotObserver(ParkingLotObserver observer) {
         this.observers.add(observer);
     }

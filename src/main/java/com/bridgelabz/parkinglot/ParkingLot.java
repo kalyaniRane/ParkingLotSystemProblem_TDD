@@ -14,10 +14,6 @@ public class ParkingLot {
     ParkingSlot parkingSlot;
     ParkingLotInformer lotInformer;
 
-    public enum DriverType{
-        NORMAL,HANDICAP
-    }
-
     public ParkingLot(int capacity) {
        setCapacity(capacity);
         lotInformer=new ParkingLotInformer();
@@ -37,12 +33,11 @@ public class ParkingLot {
     }
 
     //Function To Find List of EmptySlots Of Parking
-    public ArrayList<Integer> getSlot() {
+    public ArrayList<Integer> getEmptySlot() {
         ArrayList<Integer> emptySlots = new ArrayList<>();
-        for (int slot = 0; slot < this.actualCapacity; slot++) {
-            if (this.vehicles.get(slot) == null)
-                emptySlots.add(slot);
-        }
+        IntStream.range(0,actualCapacity)
+                .filter(slot->vehicles.get(slot)==null)
+                .forEach(emptySlots::add);
         return emptySlots;
     }
 
@@ -57,18 +52,9 @@ public class ParkingLot {
             throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionType.LOT_IS_FULL);
         }
 
-        ArrayList<Integer> emptyList = getEmptyList(driverType);
+        ArrayList<Integer> emptyList = driverType.getEmptyList(getEmptySlot());
         this.vehicles.set(emptyList.get(0), parkingSlot);
         return true;
-    }
-
-    public ArrayList<Integer> getEmptyList(DriverType driverType){
-        ArrayList<Integer> emptyParkingSlotList = getSlot();
-        if(DriverType.NORMAL.equals(driverType))
-        Collections.sort(emptyParkingSlotList,Collections.reverseOrder());
-        if(DriverType.HANDICAP.equals(driverType))
-            Collections.sort(emptyParkingSlotList);
-        return emptyParkingSlotList;
     }
 
     //Function To Confirm Vehicle Is Parked or Not

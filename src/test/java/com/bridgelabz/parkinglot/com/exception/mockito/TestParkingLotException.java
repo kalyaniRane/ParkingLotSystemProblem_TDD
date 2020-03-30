@@ -1,6 +1,7 @@
 package com.bridgelabz.parkinglot.com.exception.mockito;
 
 
+import com.bridgelabz.parkinglot.DriverType;
 import com.bridgelabz.parkinglot.ParkingLot;
 import com.bridgelabz.parkinglot.com.exception.ParkingLotException;
 import org.junit.Assert;
@@ -24,8 +25,8 @@ public class TestParkingLotException {
 
     @Test(expected = ParkingLotException.class)
     public void testExceptionClass_WhenParkFunctionCall_ShouldReturnException() {
-        doThrow(ParkingLotException.class).when(parkingLot).park(vehicle, ParkingLot.DriverType.NORMAL);
-        parkingLot.park(vehicle, ParkingLot.DriverType.NORMAL);
+        doThrow(ParkingLotException.class).when(parkingLot).park(vehicle, DriverType.NORMAL);
+        parkingLot.park(vehicle, DriverType.NORMAL);
     }
 
     @Test
@@ -38,10 +39,10 @@ public class TestParkingLotException {
                 }
                 throw new ParkingLotException("", ParkingLotException.ExceptionType.LOT_IS_FULL);
             }
-        }).when(parkingLot).park(vehicle, ParkingLot.DriverType.NORMAL);
+        }).when(parkingLot).park(vehicle,DriverType.NORMAL);
 
         try {
-            parkingLot.park(vehicle, ParkingLot.DriverType.NORMAL);
+            parkingLot.park(vehicle, DriverType.NORMAL);
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED,e.type);
         }
@@ -60,7 +61,7 @@ public class TestParkingLotException {
         }).when(parkingLot).park(any(),any());
 
         try {
-            parkingLot.park(new Object(), ParkingLot.DriverType.NORMAL);
+            parkingLot.park(new Object(), DriverType.NORMAL);
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.LOT_IS_FULL,e.type);
         }
