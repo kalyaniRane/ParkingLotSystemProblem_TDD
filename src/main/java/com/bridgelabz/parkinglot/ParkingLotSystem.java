@@ -1,118 +1,90 @@
 package com.bridgelabz.parkinglot;
 
+import com.bridgelabz.parkinglot.com.exception.ParkingLotException;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
-    public int actualCapacity;
-    public List<Vehicle> vehicles;
-    private List<ParkingLotObserver> observers;
 
-    public enum DriverType{
-        NORMAL,HANDICAP
-    }
+    int lotCapacity;
+    List<ParkingLot> parkingLots;
 
-    public ParkingLotSystem(int capacity) {
-        setCapacity(capacity);
-        this.observers = new ArrayList<>();
-    }
-
-    //Function to register Observers in List For ParkingLot
-    public void registerParkingLotObserver(ParkingLotObserver observer) {
-        this.observers.add(observer);
-    }
-
-    //Function To Set A ActualCapacity Of ParkingLot
-    public void setCapacity(int capacity) {
-        this.actualCapacity = capacity;
+    public ParkingLotSystem(int lotCapacity) {
+        this.lotCapacity = lotCapacity;
         initializeParkingLot();
     }
 
-    //Function to Initialize Null Value At The Starting For Understanding ParkingLot is Empty
     public int initializeParkingLot() {
-        this.vehicles=new ArrayList<>();
-        IntStream.range(0,this.actualCapacity).forEach(slots ->vehicles.add(null));
-        return vehicles.size();
+        this.parkingLots = new ArrayList<>();
+        IntStream.range(0, this.lotCapacity).forEach(lots -> parkingLots.add(null));
+        return parkingLots.size();
     }
 
-    //Function To Find List of EmptySlots Of Parking
-    public ArrayList<Integer> getSlot() {
-        ArrayList<Integer> emptySlots = new ArrayList<>();
-        for (int slot = 0; slot < this.actualCapacity; slot++) {
-            if (this.vehicles.get(slot) == null)
-                emptySlots.add(slot);
-        }
-        return emptySlots;
+    public void addLot(ParkingLot parkingLot) {
+        this.parkingLots.set(getEmptyLots().get(0), parkingLot);
     }
 
-    //Function To Park Vehicle In ParkingLot
-    public void park(Vehicle vehicle,DriverType driverType) throws ParkingLotException {
-        if (isVehicleParked(vehicle))
-            throw new ParkingLotException("vehicle already parked");
-
-        if (vehicles.size() == actualCapacity && !vehicles.contains(null)) {
-            for (ParkingLotObserver observer : observers)
-                observer.capacityIsFull();
-            throw new ParkingLotException("parkinglot is full");
-        }
-
-        for (ParkingLotObserver observer : observers)
-            observer.capacityIsAvailable();
-
-        ArrayList<Integer> emptyList = getEmptyList(driverType);
-        parked(emptyList.get(0),vehicle);
-    }
-
-    //Function To Park Vehicle With Given Slot
-    public void parked(int slot, Vehicle vehicle) throws ParkingLotException {
-        if (isVehicleParked(vehicle)) {
-            throw new ParkingLotException("vehicle already parked");
-        }
-        this.vehicles.set(slot, vehicle);
-    }
-
-    public ArrayList<Integer> getEmptyList(DriverType driverType){
-        ArrayList<Integer> emptyParkingSlotList = getSlot();
-        if(DriverType.NORMAL.equals(driverType))
-        Collections.sort(emptyParkingSlotList,Collections.reverseOrder());
-        if(DriverType.HANDICAP.equals(driverType))
-            Collections.sort(emptyParkingSlotList);
-        return emptyParkingSlotList;
-    }
-
-    //Function To Confirm Vehicle Is Parked or Not
-    public boolean isVehicleParked(Vehicle vehicle) {
-        if(this.vehicles.contains(vehicle)) return true;
-        return false;
-    }
-
-    //Function To UnPark Vehicle From ParkingLot
-    public boolean unPark(Vehicle vehicle) {
-        if (this.vehicles.contains(vehicle)) {
-            this.vehicles.set(this.vehicles.indexOf(vehicle), null);
+    public boolean isLotAdded(ParkingLot parkingLot) {
+        if (this.parkingLots.contains(parkingLot)) {
             return true;
         }
         return false;
     }
 
-    //Function To Find Vehicle In ParkingLot Where It is Parked
-    public int findVehicle(Vehicle vehicle) {
-        if(!this.vehicles.contains(vehicle))
-            throw new ParkingLotException("Vehicle Not Present");
-        return this.vehicles.indexOf(vehicle);
+    public ArrayList<Integer> getEmptyLots() {
+        ArrayList<Integer> emptyLots = new ArrayList<>();
+        for (int lots = 0; lots < this.lotCapacity; lots++) {
+            if (this.parkingLots.get(lots) == null)
+                emptyLots.add(lots);
+        }
+        return emptyLots;
     }
 
-    //Function To Find Time Of Vehicle When It Is Park In ParkingLot
-    public LocalTime findTimeOfVehicle(Vehicle vehicle)
-    {
-        if(!this.vehicles.contains(vehicle))
-            throw new ParkingLotException("Vehicle Not Present");
-        if(vehicle.getTime() == null)
-            throw new ParkingLotException("Vehicle Has Not Set Time");
-        return vehicle.getTime();
+    public boolean parkedVehicle(Object vehicle, ParkingLot.DriverType driverType) {
+        for(ParkingLot parkingLot : parkingLots){
+                parkingLot.park(vehicle, driverType);
+            if (parkingLot.isVehicleParked(vehicle))
+                break;
+            return true;
+        }
+        return false;
     }
 
+    public boolean unParkedVehicle(Object vehicle) {
+        for (int parkingLot = 0; parkingLot < this.parkingLots.size(); parkingLot++) {
+            if (this.parkingLots.get(parkingLot).unPark(vehicle)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isVehicleParked(Object vehicle) {
+        for(ParkingLot parkingLot: parkingLots)
+        {
+            if(parkingLot.isVehicleParked(vehicle))
+                return true;
+        }
+        return false;
+    }
+
+    public int findVehicle(Object vehicle) {
+        for(ParkingLot parkingLot: parkingLots)
+        {
+            return parkingLot.findVehicle(vehicle);
+        }
+        throw new ParkingLotException("Vehicle Not Present", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+    }
+
+    public LocalTime getVehicleParkedTime(Object vehicle) {
+        for(ParkingLot parkingLot: parkingLots)
+        {
+            return parkingLot.getVehicleParkedTime(vehicle);
+        }
+        return null;
+    }
 }
+
