@@ -1,6 +1,5 @@
-package com.bridgelabz.parkinglot.com.exception.mockito;
+package com.bridgelabz.parkinglot.exception.mockito;
 
-import com.bridgelabz.parkinglot.DriverType;
 import com.bridgelabz.parkinglot.ParkingLot;
 import com.bridgelabz.parkinglot.ParkingLotSystem;
 import org.junit.Assert;
@@ -10,11 +9,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
 import static org.mockito.Mockito.*;
 
 public class TestParkingLotSystem {
-
 
     @Mock
     ParkingLot parkingLot;
@@ -28,15 +25,8 @@ public class TestParkingLotSystem {
     @Before
     public void setUp() throws Exception {
         vehicle = new Object();
-        parkingLotSystem =new ParkingLotSystem(3);
+        parkingLotSystem =new ParkingLotSystem();
         parkingLotSystem.addLot(parkingLot);
-    }
-
-    @Test
-    public void testParkedVehicle() {
-        when(parkingLot.park(vehicle, DriverType.NORMAL)).thenReturn(true);
-        boolean park = parkingLotSystem.parkedVehicle(vehicle, DriverType.NORMAL);
-        Assert.assertTrue(park);
     }
 
     @Test
@@ -59,5 +49,6 @@ public class TestParkingLotSystem {
         int slot = parkingLotSystem.findVehicle(vehicle);
         Assert.assertEquals(1,slot);
     }
+
 
 }

@@ -1,30 +1,22 @@
 package com.bridgelabz.parkinglot;
 
-import com.bridgelabz.parkinglot.com.exception.ParkingLotException;
-
+import com.bridgelabz.parkinglot.enums.VehicleType;
+import com.bridgelabz.parkinglot.exception.ParkingLotException;
+import com.bridgelabz.parkinglot.enums.DriverType;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ParkingLotSystem {
 
-    int lotCapacity;
     List<ParkingLot> parkingLots;
-
-    public ParkingLotSystem(int lotCapacity) {
-        this.lotCapacity = lotCapacity;
-        initializeParkingLot();
-    }
-
-    public int initializeParkingLot() {
-        this.parkingLots = new ArrayList<>();
-        IntStream.range(0, this.lotCapacity).forEach(lots -> parkingLots.add(null));
-        return parkingLots.size();
+    ParkingLot lot;
+    public ParkingLotSystem() {
+          this.parkingLots = new ArrayList<>();
     }
 
     public void addLot(ParkingLot parkingLot) {
-        this.parkingLots.set(getEmptyLots().get(0), parkingLot);
+        this.parkingLots.add(parkingLot);
     }
 
     public boolean isLotAdded(ParkingLot parkingLot) {
@@ -32,31 +24,35 @@ public class ParkingLotSystem {
         return false;
     }
 
-    public ArrayList<Integer> getEmptyLots() {
-        ArrayList<Integer> emptyLots = new ArrayList<>();
-        IntStream.range(0,lotCapacity)
-                .filter(slot->parkingLots.get(slot)==null)
-                .forEach(emptyLots::add);
-        return emptyLots;
+    public ParkingLot getLotHaveMaxSpace(List<ParkingLot> parkingLots) {
+        return parkingLots.stream().sorted(Comparator.comparing(list -> list.getEmptySlotList().size(), Comparator.reverseOrder())).collect(Collectors.toList()).get(0);
     }
 
-    public boolean parkedVehicle(Object vehicle,DriverType driverType) {
-        for(ParkingLot parkingLot : parkingLots){
-            return parkingLot.park(vehicle, driverType);
+    public boolean parkedVehicle(Object vehicle, DriverType driverType,VehicleType vehicleType) {
+        lot = getLotHaveMaxSpace(parkingLots);
+        int emptySlot = 0;
+        try {
+            ArrayList<Integer> emptyList = driverType.getEmptyList(lot.getEmptySlotList());
+            Collections.sort(emptyList);
+            emptySlot = vehicleType.getEmptySlot(emptyList);
+            return lot.park(emptySlot, vehicle);
+        }catch (ParkingLotException e){
+           lot.park(emptySlot,vehicle);
         }
-        return false;
+        throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionType.LOT_IS_FULL);
     }
 
     public boolean unParkedVehicle(Object vehicle) {
-        for (ParkingLot parkingLot :parkingLots) {
+        for (ParkingLot parkingLot : parkingLots) {
             return parkingLot.unPark(vehicle);
         }
         return false;
     }
 
     public boolean isVehicleParked(Object vehicle) {
-        for(ParkingLot parkingLot: parkingLots)
-            return parkingLot.isVehicleParked(vehicle);
+        for(ParkingLot parkingLot : parkingLots)
+            if(parkingLot.isVehicleParked(vehicle))
+                return true;
         return false;
     }
 
@@ -71,4 +67,5 @@ public class ParkingLotSystem {
             return parkingLot.getVehicleParkedTime(vehicle);
         throw new ParkingLotException("Time Not Available", ParkingLotException.ExceptionType.TIME_NOT_AVAILABLE);
     }
+
 }

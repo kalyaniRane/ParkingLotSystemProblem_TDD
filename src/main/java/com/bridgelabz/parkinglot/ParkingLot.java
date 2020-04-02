@@ -1,10 +1,9 @@
 package com.bridgelabz.parkinglot;
 
-import com.bridgelabz.parkinglot.com.exception.ParkingLotException;
+import com.bridgelabz.parkinglot.exception.ParkingLotException;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -16,7 +15,7 @@ public class ParkingLot {
 
     public ParkingLot(int capacity) {
        setCapacity(capacity);
-        lotInformer=new ParkingLotInformer();
+        lotInformer=ParkingLotInformer.getInstance();
     }
 
     //Function To Set A ActualCapacity Of ParkingLot
@@ -33,7 +32,7 @@ public class ParkingLot {
     }
 
     //Function To Find List of EmptySlots Of Parking
-    public ArrayList<Integer> getEmptySlot() {
+    public ArrayList<Integer> getEmptySlotList() {
         ArrayList<Integer> emptySlots = new ArrayList<>();
         IntStream.range(0,actualCapacity)
                 .filter(slot->vehicles.get(slot)==null)
@@ -42,7 +41,7 @@ public class ParkingLot {
     }
 
     //Function To Park Vehicle In ParkingLot
-    public boolean park(Object vehicle,DriverType driverType) throws ParkingLotException {
+    public boolean park(int emptySlot,Object vehicle) throws ParkingLotException {
         parkingSlot = new ParkingSlot(vehicle);
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("vehicle already parked",ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED);
@@ -52,8 +51,7 @@ public class ParkingLot {
             throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionType.LOT_IS_FULL);
         }
 
-        ArrayList<Integer> emptyList = driverType.getEmptyList(getEmptySlot());
-        this.vehicles.set(emptyList.get(0), parkingSlot);
+        this.vehicles.set(emptySlot, parkingSlot);
         return true;
     }
 

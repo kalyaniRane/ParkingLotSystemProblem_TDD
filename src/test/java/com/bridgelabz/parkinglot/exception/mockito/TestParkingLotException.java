@@ -1,9 +1,9 @@
-package com.bridgelabz.parkinglot.com.exception.mockito;
+package com.bridgelabz.parkinglot.exception.mockito;
 
 
-import com.bridgelabz.parkinglot.DriverType;
+import com.bridgelabz.parkinglot.enums.DriverType;
 import com.bridgelabz.parkinglot.ParkingLot;
-import com.bridgelabz.parkinglot.com.exception.ParkingLotException;
+import com.bridgelabz.parkinglot.exception.ParkingLotException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +25,8 @@ public class TestParkingLotException {
 
     @Test(expected = ParkingLotException.class)
     public void testExceptionClass_WhenParkFunctionCall_ShouldReturnException() {
-        doThrow(ParkingLotException.class).when(parkingLot).park(vehicle, DriverType.NORMAL);
-        parkingLot.park(vehicle, DriverType.NORMAL);
+        doThrow(ParkingLotException.class).when(parkingLot).park(0,vehicle);
+        parkingLot.park(0,vehicle);
     }
 
     @Test
@@ -34,15 +34,15 @@ public class TestParkingLotException {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                if (invocation.getArgument(0).equals(vehicle)) {
+                if (invocation.getArgument(0).equals(0)) {
                     throw new ParkingLotException("", ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED);
                 }
                 throw new ParkingLotException("", ParkingLotException.ExceptionType.LOT_IS_FULL);
             }
-        }).when(parkingLot).park(vehicle,DriverType.NORMAL);
+        }).when(parkingLot).park(0,vehicle);
 
         try {
-            parkingLot.park(vehicle, DriverType.NORMAL);
+            parkingLot.park(0,vehicle);
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED,e.type);
         }
@@ -53,15 +53,15 @@ public class TestParkingLotException {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                if (invocation.getArgument(0).equals(vehicle)) {
+                if (invocation.getArgument(0).equals(0)) {
                     throw new ParkingLotException("", ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED);
                 }
                 throw new ParkingLotException("", ParkingLotException.ExceptionType.LOT_IS_FULL);
             }
-        }).when(parkingLot).park(any(),any());
+        }).when(parkingLot).park(0,vehicle);
 
         try {
-            parkingLot.park(new Object(), DriverType.NORMAL);
+            parkingLot.park(1,vehicle);
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.LOT_IS_FULL,e.type);
         }
