@@ -126,4 +126,15 @@ public class ParkingLot {
         return vehicleList;
     }
 
+    //Function To Search Vehicles Which Parked In The Last 30 Minutes
+    public ArrayList<Integer> searchVehiclesWhoseParkLast30Minutes(){
+        ArrayList<Integer>vehicleList=new ArrayList<>();
+        IntStream.range(0,actualCapacity)
+                .filter(slot->vehicles.get(slot).getTime().getMinute()-LocalTime.now().getMinute()<=30)
+                .forEach(vehicleList::add);
+        if(vehicleList.isEmpty())
+            throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+        return vehicleList;
+    }
+
 }

@@ -89,4 +89,11 @@ public class ParkingLotSystem {
         throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
     }
 
+    public ArrayList<Integer> searchVehiclesWhoseParkLast30Minutes(){
+        for (ParkingLot lot:parkingLots) {
+            return lot.searchVehiclesWhoseParkLast30Minutes();
+        }
+        throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+    }
+
 }

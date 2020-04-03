@@ -84,4 +84,14 @@ public class TestParkingLotSystem {
         Assert.assertEquals(list,vehiclesList);
     }
 
+    @Test
+    public void testSearchVehiclesWhoseParkLast30Minutes() {
+        ArrayList<Integer> list=new ArrayList<>();
+        list.add(0);
+        list.add(1);
+        when(parkingLot.searchVehiclesWhoseParkLast30Minutes()).thenReturn(list);
+        ArrayList<Integer> vehiclesList = parkingLotSystem.searchVehiclesWhoseParkLast30Minutes();
+        Assert.assertEquals(list,vehiclesList);
+    }
+
 }

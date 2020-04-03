@@ -353,5 +353,21 @@ public class ParkingLotSystemTest {
         }
     }
 
+    //UC15
+    @Test
+    public void givenParkingLot_WhenParkedBefore30Minutes_ShouldReturnListOfSlots() {
+        Vehicle vehicle2 = new Vehicle("White","BMW","MH18 BN 78963");
+        Vehicle vehicle3 = new Vehicle("Black","BMW","MH20 TY 01210");
+        expectedList.add(0);
+        expectedList.add(1);
+        expectedList.add(2);
+        parkingLot.setCapacity(3);
+        parkingLotSystem.parkedVehicle(vehicle2, DriverType.NORMAL,VehicleType.SMALL);
+        parkingLotSystem.parkedVehicle(vehicle1, DriverType.NORMAL,VehicleType.SMALL);
+        parkingLotSystem.parkedVehicle(vehicle3,DriverType.NORMAL,VehicleType.SMALL);
+        ArrayList sortedVehicleList = parkingLotSystem.searchVehiclesWhoseParkLast30Minutes();
+        Assert.assertEquals(expectedList, sortedVehicleList);
+    }
+
 
 }
