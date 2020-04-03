@@ -74,5 +74,14 @@ public class TestParkingLotSystem {
         Assert.assertSame(expectedNumber,vehicleList);
     }
 
+    @Test
+    public void testSearchVehiclesByName() {
+        ArrayList<Integer> list=new ArrayList<>();
+        list.add(0);
+        list.add(1);
+        when(parkingLot.searchVehiclesByName(any())).thenReturn(list);
+        ArrayList<Integer> vehiclesList = parkingLotSystem.searchVehiclesByName("BMW");
+        Assert.assertEquals(list,vehiclesList);
+    }
 
 }

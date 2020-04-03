@@ -114,4 +114,16 @@ public class ParkingLot {
         return vehicleList;
     }
 
+    //Function To Search Vehicle By Its Name
+    public ArrayList<Integer> searchVehiclesByName(String name){
+        ArrayList<Integer>vehicleList=new ArrayList<>();
+        IntStream.range(0,actualCapacity)
+                .filter(slot->vehicles.get(slot).vehicle.getVehicleName()==name)
+                .forEach(vehicleList::add);
+
+        if(vehicleList.isEmpty())
+            throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+        return vehicleList;
+    }
+
 }

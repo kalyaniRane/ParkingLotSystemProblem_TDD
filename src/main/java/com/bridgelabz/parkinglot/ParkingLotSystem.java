@@ -83,5 +83,10 @@ public class ParkingLotSystem {
         throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
     }
 
+    public ArrayList<Integer> searchVehiclesByName(String name){
+        for (ParkingLot lot: parkingLots)
+            return lot.searchVehiclesByName(name);
+        throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+    }
 
 }
