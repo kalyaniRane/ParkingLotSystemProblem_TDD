@@ -59,6 +59,7 @@ public class ParkingLot {
         parkingSlot = new ParkingSlot(vehicle,vehicleType,driverType);
         this.vehicles.set(emptySlot, parkingSlot);
         return true;
+
     }
 
     //Function To Confirm Vehicle Is Parked or Not
@@ -157,6 +158,16 @@ public class ParkingLot {
         return vehicleDetails;
     }
 
+    //Function To Search Vehicles By DriverType And Vehicle Type
+    public ArrayList<String> searchAllVehicles(){
+        ArrayList<String> vehicleDetails=new ArrayList<>();
 
+        IntStream.range(0,actualCapacity)
+                .filter(slot->vehicles.get(slot)!=null)
+                .mapToObj(slot->(slot+" "+vehicles.get(slot).getVehicle().getVehicleName()+" "+vehicles.get(slot).getVehicle().getColour()+" "+vehicles.get(slot).getVehicle().getPlateNumber()))
+                .forEach(vehicleDetails::add);
+
+        return vehicleDetails;
+    }
 
 }

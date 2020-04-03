@@ -106,4 +106,14 @@ public class TestParkingLotSystem {
         Assert.assertEquals(list,vehiclesList);
     }
 
+    @Test
+    public void testSearchAllVehiclesDetails() {
+        ArrayList<String> list=new ArrayList<>();
+        list.add("");
+        list.add("");
+        when(parkingLot.searchAllVehicles()).thenReturn(list);
+        ArrayList<String> vehiclesList = parkingLotSystem.searchAllVehicles();
+        Assert.assertEquals(list,vehiclesList);
+    }
+
 }

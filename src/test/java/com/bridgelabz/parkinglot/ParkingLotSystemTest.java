@@ -392,4 +392,29 @@ public class ParkingLotSystemTest {
         Assert.assertEquals(expectedList,vehiclesDetails);
     }
 
+    //UC17
+    @Test
+    public void givenAllVehicle_WhenParked_ShouldReturnDetails() {
+        List<String> expectedList=new ArrayList<>();
+        Vehicle vehicle2 = new Vehicle("White","BMW","MH18 BN 78963");
+        Vehicle vehicle3 = new Vehicle("Red","Swift","MH20 TY 01210");
+        Vehicle vehicle4 = new Vehicle("Wine","Honda","MH19 BO 4920");
+        Vehicle vehicle5 = new Vehicle("Black","Volvo","MH24 AE 84235");
+
+        parkingLot.setCapacity(10);
+        expectedList.add("0 Toyota White MH19 AB 2341");
+        expectedList.add("1 BMW White MH18 BN 78963");
+        expectedList.add("2 Swift Red MH20 TY 01210");
+        expectedList.add("3 Honda Wine MH19 BO 4920");
+        expectedList.add("4 Volvo Black MH24 AE 84235");
+
+        parkingLotSystem.parkedVehicle(vehicle,DriverType.HANDICAP,VehicleType.SMALL);
+        parkingLotSystem.parkedVehicle(vehicle2,DriverType.NORMAL,VehicleType.LARGE);
+        parkingLotSystem.parkedVehicle(vehicle3,DriverType.HANDICAP,VehicleType.SMALL);
+        parkingLotSystem.parkedVehicle(vehicle4,DriverType.NORMAL,VehicleType.SMALL);
+        parkingLotSystem.parkedVehicle(vehicle5,DriverType.HANDICAP,VehicleType.SMALL);
+        List<String> vehiclesDetails = parkingLotSystem.searchAllVehicles();
+        Assert.assertEquals(expectedList,vehiclesDetails);
+    }
+
 }
