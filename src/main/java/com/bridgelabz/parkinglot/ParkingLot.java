@@ -101,4 +101,17 @@ public class ParkingLot {
         return vehicleList;
     }
 
+    //Function To Get A Plate Number Of Vehicle Which Sorted By Its Name And Colour
+    public ArrayList<String> searchVehiclesByNameAndByColour(String name, String colour){
+        ArrayList<String>vehicleList=new ArrayList<>();
+        IntStream.range(0,actualCapacity)
+                .filter(slot->vehicles.get(slot).vehicle.getVehicleName()==name)
+                .filter(slot->vehicles.get(slot).vehicle.getColour()==colour)
+                .forEach(slot->vehicleList.add(vehicles.get(slot).vehicle.getPlateNumber()));
+
+        if(vehicleList.isEmpty())
+            throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+        return vehicleList;
+    }
+
 }

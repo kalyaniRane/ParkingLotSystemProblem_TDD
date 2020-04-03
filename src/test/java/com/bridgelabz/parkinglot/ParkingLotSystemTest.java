@@ -1,5 +1,6 @@
 package com.bridgelabz.parkinglot;
 
+import com.bridgelabz.parkinglot.Dao.ParkingSlot;
 import com.bridgelabz.parkinglot.Dao.Vehicle;
 import com.bridgelabz.parkinglot.enums.VehicleType;
 import com.bridgelabz.parkinglot.exception.ParkingLotException;
@@ -285,6 +286,36 @@ public class ParkingLotSystemTest {
             parkingLotSystem.parkedVehicle(vehicle2, DriverType.NORMAL, VehicleType.SMALL);
             parkingLotSystem.parkedVehicle(vehicle3, DriverType.NORMAL, VehicleType.SMALL);
             parkingLotSystem.searchVehiclesByColour("White");
+        }catch (ParkingLotException e)
+        {
+            Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,e.type);
+        }
+    }
+
+    //UC13
+    @Test
+    public void givenVehicles_WhenParkedWithBlueColorAndToyota_ShouldReturnListOfPlateNumbers() {
+        ArrayList<String> expectedNumber=new ArrayList<>();
+        Vehicle vehicle2=new Vehicle("Blue","Toyota","MH19 NJ 56781");
+        Vehicle vehicle3 =new Vehicle("Blue","Toyota","MH16 OP 123456");
+        expectedNumber.add("MH19 NJ 56781");
+        expectedNumber.add("MH16 OP 123456");
+        parkingLotSystem.parkedVehicle(vehicle2,DriverType.NORMAL,VehicleType.SMALL);
+        parkingLotSystem.parkedVehicle(vehicle3,DriverType.NORMAL,VehicleType.SMALL);
+        ArrayList<String> strings = parkingLotSystem.searchVehiclesByNameAndByColour("Toyota", "Blue");
+        Assert.assertEquals(expectedNumber,strings);
+    }
+
+    @Test
+    public void givenParkingLot_WhenParkedWithoutBlueColorAndToyota_ShouldThrowException() {
+        Vehicle vehicle2 = new Vehicle("Red","Swift Desire","MH17 OP 98765");
+        Vehicle vehicle3 = new Vehicle("Black","Honda","MH18 BH 845621");
+        parkingLot.setCapacity(3);
+        try {
+            parkingLotSystem.parkedVehicle(vehicle1, DriverType.NORMAL, VehicleType.SMALL);
+            parkingLotSystem.parkedVehicle(vehicle2, DriverType.NORMAL, VehicleType.SMALL);
+            parkingLotSystem.parkedVehicle(vehicle3, DriverType.NORMAL, VehicleType.SMALL);
+            parkingLotSystem.searchVehiclesByNameAndByColour("Toyota", "Blue");
         }catch (ParkingLotException e)
         {
             Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,e.type);

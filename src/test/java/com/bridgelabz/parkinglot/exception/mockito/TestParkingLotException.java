@@ -99,4 +99,20 @@ public class TestParkingLotException {
         }
     }
 
+    @Test
+    public void testExceptionClass_WhenVehicleNotFoundByGivenNameAndColour_ShouldReturnException() {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                throw new ParkingLotException("", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+            }
+        }).when(parkingLot).searchVehiclesByNameAndByColour(any(),any());
+
+        try {
+            parkingLot.searchVehiclesByNameAndByColour("BMW","Blue");
+        }catch (ParkingLotException e){
+            Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,e.type);
+        }
+    }
+
 }

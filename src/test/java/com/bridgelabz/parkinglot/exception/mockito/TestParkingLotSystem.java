@@ -64,4 +64,15 @@ public class TestParkingLotSystem {
         Assert.assertEquals(list,vehiclesList);
     }
 
+    @Test
+    public void testSearchVehiclesByNameAndGetPlateNumber() {
+        ArrayList<String> expectedNumber=new ArrayList<>();
+        expectedNumber.add("MH19 NJ 56781");
+        expectedNumber.add("MH16 OP 123456");
+        when(parkingLot.searchVehiclesByNameAndByColour(any(),any())).thenReturn(expectedNumber);
+        ArrayList<String> vehicleList = parkingLotSystem.searchVehiclesByNameAndByColour("Toyota", "Blue");
+        Assert.assertSame(expectedNumber,vehicleList);
+    }
+
+
 }
