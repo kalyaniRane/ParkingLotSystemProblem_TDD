@@ -7,6 +7,7 @@ import com.bridgelabz.parkinglot.exception.ParkingLotException;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ParkingLot {
@@ -107,7 +108,9 @@ public class ParkingLot {
         IntStream.range(0,actualCapacity)
                 .filter(slot->vehicles.get(slot).vehicle.getVehicleName()==name)
                 .filter(slot->vehicles.get(slot).vehicle.getColour()==colour)
-                .forEach(slot->vehicleList.add(vehicles.get(slot).vehicle.getPlateNumber()));
+                .mapToObj(slot->(slot+" "+vehicles.get(slot).vehicle.getPlateNumber()))
+                .collect(Collectors.toList())
+                .forEach(vehicleList::add);
 
         if(vehicleList.isEmpty())
             throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
@@ -136,5 +139,6 @@ public class ParkingLot {
             throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
         return vehicleList;
     }
+
 
 }

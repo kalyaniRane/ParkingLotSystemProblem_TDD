@@ -298,8 +298,8 @@ public class ParkingLotSystemTest {
         ArrayList<String> expectedNumber=new ArrayList<>();
         Vehicle vehicle2=new Vehicle("Blue","Toyota","MH19 NJ 56781");
         Vehicle vehicle3 =new Vehicle("Blue","Toyota","MH16 OP 123456");
-        expectedNumber.add("MH19 NJ 56781");
-        expectedNumber.add("MH16 OP 123456");
+        expectedNumber.add("0 MH19 NJ 56781");
+        expectedNumber.add("1 MH16 OP 123456");
         parkingLotSystem.parkedVehicle(vehicle2,DriverType.NORMAL,VehicleType.SMALL);
         parkingLotSystem.parkedVehicle(vehicle3,DriverType.NORMAL,VehicleType.SMALL);
         ArrayList<String> strings = parkingLotSystem.searchVehiclesByNameAndByColour("Toyota", "Blue");
