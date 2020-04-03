@@ -2,11 +2,14 @@ package com.bridgelabz.parkinglot;
 
 import com.bridgelabz.parkinglot.Dao.ParkingSlot;
 import com.bridgelabz.parkinglot.Dao.Vehicle;
+import com.bridgelabz.parkinglot.enums.DriverType;
+import com.bridgelabz.parkinglot.enums.VehicleType;
 import com.bridgelabz.parkinglot.exception.ParkingLotException;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -17,7 +20,7 @@ public class ParkingLot {
     ParkingLotInformer lotInformer;
 
     public ParkingLot(int capacity) {
-       setCapacity(capacity);
+        setCapacity(capacity);
         lotInformer=ParkingLotInformer.getInstance();
     }
 
@@ -44,8 +47,8 @@ public class ParkingLot {
     }
 
     //Function To Park Vehicle In ParkingLot
-    public boolean park(int emptySlot,Vehicle vehicle) throws ParkingLotException {
-        parkingSlot = new ParkingSlot(vehicle);
+    public boolean park(int emptySlot, Vehicle vehicle, DriverType driverType, VehicleType vehicleType) throws ParkingLotException {
+
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("vehicle already parked",ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED);
 
@@ -53,7 +56,7 @@ public class ParkingLot {
             lotInformer.getInformedObserver();
             throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionType.LOT_IS_FULL);
         }
-
+        parkingSlot = new ParkingSlot(vehicle,vehicleType,driverType);
         this.vehicles.set(emptySlot, parkingSlot);
         return true;
     }
@@ -94,7 +97,7 @@ public class ParkingLot {
     public ArrayList<Integer> searchVehiclesByColour(String colour){
         ArrayList<Integer>vehicleList=new ArrayList<>();
         IntStream.range(0,actualCapacity)
-                .filter(slot->vehicles.get(slot).vehicle.getColour()==colour)
+                .filter(slot->vehicles.get(slot).getVehicle().getColour()==colour)
                 .forEach(vehicleList::add);
 
         if(vehicleList.isEmpty())
@@ -106,9 +109,9 @@ public class ParkingLot {
     public ArrayList<String> searchVehiclesByNameAndByColour(String name, String colour){
         ArrayList<String>vehicleList=new ArrayList<>();
         IntStream.range(0,actualCapacity)
-                .filter(slot->vehicles.get(slot).vehicle.getVehicleName()==name)
-                .filter(slot->vehicles.get(slot).vehicle.getColour()==colour)
-                .mapToObj(slot->(slot+" "+vehicles.get(slot).vehicle.getPlateNumber()))
+                .filter(slot-> vehicles.get(slot).getVehicle().getVehicleName()==name)
+                .filter(slot-> vehicles.get(slot).getVehicle().getColour()==colour)
+                .mapToObj(slot->(slot+" "+ vehicles.get(slot).getVehicle().getPlateNumber()))
                 .collect(Collectors.toList())
                 .forEach(vehicleList::add);
 
@@ -121,7 +124,7 @@ public class ParkingLot {
     public ArrayList<Integer> searchVehiclesByName(String name){
         ArrayList<Integer>vehicleList=new ArrayList<>();
         IntStream.range(0,actualCapacity)
-                .filter(slot->vehicles.get(slot).vehicle.getVehicleName()==name)
+                .filter(slot->vehicles.get(slot).getVehicle().getVehicleName()==name)
                 .forEach(vehicleList::add);
 
         if(vehicleList.isEmpty())
@@ -129,7 +132,7 @@ public class ParkingLot {
         return vehicleList;
     }
 
-    //Function To Search Vehicles Which Parked In The Last 30 Minutes
+    //Function To Search Vehicle By Its Name
     public ArrayList<Integer> searchVehiclesWhoseParkLast30Minutes(){
         ArrayList<Integer>vehicleList=new ArrayList<>();
         IntStream.range(0,actualCapacity)
@@ -139,6 +142,21 @@ public class ParkingLot {
             throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
         return vehicleList;
     }
+
+    //Function To Search Vehicles By DriverType And Vehicle Type
+    public ArrayList<String> searchVehicleByDriverTypeAndVehicleType(DriverType driverType , VehicleType vehicleType){
+        ArrayList<String> vehicleDetails=new ArrayList<>();
+
+        IntStream.range(0,actualCapacity)
+                .filter(slot->vehicles.get(slot)!=null)
+                .filter(slot-> vehicles.get(slot).getVehicleType1()==vehicleType)
+                .filter(slot->vehicles.get(slot).getDriver()==driverType)
+                .mapToObj(slot->(vehicles.get(slot).getVehicle().getVehicleName()+" "+vehicles.get(slot).getVehicle().getColour()+" "+vehicles.get(slot).getVehicle().getPlateNumber()))
+                .forEach(vehicleDetails::add);
+
+        return vehicleDetails;
+    }
+
 
 
 }

@@ -3,6 +3,8 @@ package com.bridgelabz.parkinglot.exception.mockito;
 import com.bridgelabz.parkinglot.Dao.Vehicle;
 import com.bridgelabz.parkinglot.ParkingLot;
 import com.bridgelabz.parkinglot.ParkingLotSystem;
+import com.bridgelabz.parkinglot.enums.DriverType;
+import com.bridgelabz.parkinglot.enums.VehicleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -91,6 +93,16 @@ public class TestParkingLotSystem {
         list.add(1);
         when(parkingLot.searchVehiclesWhoseParkLast30Minutes()).thenReturn(list);
         ArrayList<Integer> vehiclesList = parkingLotSystem.searchVehiclesWhoseParkLast30Minutes();
+        Assert.assertEquals(list,vehiclesList);
+    }
+
+    @Test
+    public void testSearchVehiclesDetailsByVehicleTypeAndDriverType() {
+        ArrayList<String> list=new ArrayList<>();
+        list.add("");
+        list.add("");
+        when(parkingLot.searchVehicleByDriverTypeAndVehicleType(any(),any())).thenReturn(list);
+        ArrayList<String> vehiclesList = parkingLotSystem.searchVehicleByDriverTypeAndVehicleType( DriverType.HANDICAP, VehicleType.SMALL);
         Assert.assertEquals(list,vehiclesList);
     }
 

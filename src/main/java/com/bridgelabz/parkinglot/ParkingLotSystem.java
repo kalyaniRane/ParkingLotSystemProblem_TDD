@@ -7,13 +7,14 @@ import com.bridgelabz.parkinglot.enums.DriverType;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
 
     List<ParkingLot> parkingLots;
     ParkingLot lot;
     public ParkingLotSystem() {
-          this.parkingLots = new ArrayList<>();
+        this.parkingLots = new ArrayList<>();
     }
 
     public void addLot(ParkingLot parkingLot) {
@@ -36,9 +37,9 @@ public class ParkingLotSystem {
             ArrayList<Integer> emptyList = driverType.getEmptyList(lot.getEmptySlotList());
             Collections.sort(emptyList);
             emptySlot = vehicleType.getEmptySlot(emptyList);
-            return lot.park(emptySlot, vehicle);
+            return lot.park(emptySlot, vehicle,driverType,vehicleType);
         }catch (ParkingLotException e){
-           lot.park(emptySlot,vehicle);
+            lot.park(emptySlot,vehicle,driverType, vehicleType);
         }
         throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionType.LOT_IS_FULL);
     }
@@ -95,5 +96,13 @@ public class ParkingLotSystem {
         }
         throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
     }
+
+    public ArrayList<String> searchVehicleByDriverTypeAndVehicleType(DriverType driverType , VehicleType vehicleType){
+        for (ParkingLot lot:parkingLots) {
+            return lot.searchVehicleByDriverTypeAndVehicleType(driverType,vehicleType);
+        }
+        throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+    }
+
 
 }

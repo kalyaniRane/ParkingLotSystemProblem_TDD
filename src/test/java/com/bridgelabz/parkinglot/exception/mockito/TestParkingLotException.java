@@ -3,6 +3,8 @@ package com.bridgelabz.parkinglot.exception.mockito;
 
 import com.bridgelabz.parkinglot.Dao.Vehicle;
 import com.bridgelabz.parkinglot.ParkingLot;
+import com.bridgelabz.parkinglot.enums.DriverType;
+import com.bridgelabz.parkinglot.enums.VehicleType;
 import com.bridgelabz.parkinglot.exception.ParkingLotException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +17,9 @@ import static org.mockito.Mockito.*;
 public class TestParkingLotException {
 
     Vehicle vehicle;
+    DriverType driverType;
     ParkingLot parkingLot;
+    VehicleType vehicleType;
 
     @Before
     public void setUp() throws Exception {
@@ -25,8 +29,8 @@ public class TestParkingLotException {
 
     @Test(expected = ParkingLotException.class)
     public void testExceptionClass_WhenParkFunctionCall_ShouldReturnException() {
-        doThrow(ParkingLotException.class).when(parkingLot).park(0,vehicle);
-        parkingLot.park(0,vehicle);
+        doThrow(ParkingLotException.class).when(parkingLot).park(0,vehicle, driverType, vehicleType);
+        parkingLot.park(0,vehicle, driverType, vehicleType);
     }
 
     @Test
@@ -39,10 +43,10 @@ public class TestParkingLotException {
                 }
                 throw new ParkingLotException("", ParkingLotException.ExceptionType.LOT_IS_FULL);
             }
-        }).when(parkingLot).park(0,vehicle);
+        }).when(parkingLot).park(0,vehicle, driverType, vehicleType);
 
         try {
-            parkingLot.park(0,vehicle);
+            parkingLot.park(0,vehicle, driverType, vehicleType);
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED,e.type);
         }
@@ -58,10 +62,10 @@ public class TestParkingLotException {
                 }
                 throw new ParkingLotException("", ParkingLotException.ExceptionType.LOT_IS_FULL);
             }
-        }).when(parkingLot).park(0,vehicle);
+        }).when(parkingLot).park(0,vehicle, driverType, vehicleType);
 
         try {
-            parkingLot.park(1,vehicle);
+            parkingLot.park(1,vehicle, driverType, vehicleType);
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.LOT_IS_FULL,e.type);
         }
