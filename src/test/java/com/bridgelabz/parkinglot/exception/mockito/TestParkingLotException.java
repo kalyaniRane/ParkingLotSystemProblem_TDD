@@ -1,7 +1,7 @@
 package com.bridgelabz.parkinglot.exception.mockito;
 
 
-import com.bridgelabz.parkinglot.enums.DriverType;
+import com.bridgelabz.parkinglot.Dao.Vehicle;
 import com.bridgelabz.parkinglot.ParkingLot;
 import com.bridgelabz.parkinglot.exception.ParkingLotException;
 import org.junit.Assert;
@@ -14,12 +14,12 @@ import static org.mockito.Mockito.*;
 
 public class TestParkingLotException {
 
-    Object vehicle;
+    Vehicle vehicle;
     ParkingLot parkingLot;
 
     @Before
     public void setUp() throws Exception {
-        vehicle = new Object();
+        vehicle = new Vehicle();
         parkingLot=mock(ParkingLot.class);
     }
 
@@ -77,7 +77,23 @@ public class TestParkingLotException {
         }).when(parkingLot).findVehicle(vehicle);
 
         try {
-            parkingLot.findVehicle(new Object());
+            parkingLot.findVehicle(new Vehicle());
+        }catch (ParkingLotException e){
+            Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,e.type);
+        }
+    }
+
+    @Test
+    public void testExceptionClass_WhenVehicleNotFoundByGivenColour_ShouldReturnException() {
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                throw new ParkingLotException("", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+            }
+        }).when(parkingLot).searchVehiclesByColour(any());
+
+        try {
+            parkingLot.searchVehiclesByColour("White");
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,e.type);
         }

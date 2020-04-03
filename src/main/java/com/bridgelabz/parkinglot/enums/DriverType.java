@@ -1,5 +1,8 @@
 package com.bridgelabz.parkinglot.enums;
 
+import com.bridgelabz.parkinglot.ParkingLotSystem;
+import com.bridgelabz.parkinglot.exception.ParkingLotException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 

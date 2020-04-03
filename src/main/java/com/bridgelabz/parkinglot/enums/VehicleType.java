@@ -12,7 +12,6 @@ public enum VehicleType {
         public int getEmptySlot(ArrayList<Integer> emptySlotList) {
             Collections.sort(emptySlotList);
             for (int slot=0;slot<emptySlotList.size();slot++){
-
                 if(emptySlotList.get(slot)==slot && emptySlotList.get(slot+1)==slot+1 && emptySlotList.get(slot+2)==slot+2)
                     return emptySlotList.get(slot+1);
             }

@@ -1,6 +1,7 @@
 package com.bridgelabz.parkinglot.exception.mockito;
 
 import com.bridgelabz.parkinglot.AirportSecurity;
+import com.bridgelabz.parkinglot.Dao.Vehicle;
 import com.bridgelabz.parkinglot.ParkingLotInformer;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,12 +15,10 @@ import static org.mockito.Mockito.mock;
 public class TestAirportSecurity {
 
     AirportSecurity airportSecurity;
-    Object vehicle;
     ParkingLotInformer lotInformer;
 
     @Before
     public void setUp() throws Exception {
-        vehicle=new Object();
         airportSecurity = new AirportSecurity();
         lotInformer=mock(ParkingLotInformer.class);
     }

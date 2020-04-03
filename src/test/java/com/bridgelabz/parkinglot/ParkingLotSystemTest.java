@@ -1,5 +1,6 @@
 package com.bridgelabz.parkinglot;
 
+import com.bridgelabz.parkinglot.Dao.Vehicle;
 import com.bridgelabz.parkinglot.enums.VehicleType;
 import com.bridgelabz.parkinglot.exception.ParkingLotException;
 import com.bridgelabz.parkinglot.enums.DriverType;
@@ -17,8 +18,8 @@ public class ParkingLotSystemTest {
     ParkingLotSystem parkingLotSystem=null;
     ParkingLotInformer lotInformer=null;
     ParkingLot parkingLot,parkingLot1;
-    Object vehicle=null;
-    Object vehicle1=null;
+    Vehicle vehicle=null;
+    Vehicle vehicle1=null;
     List expectedList;
 
     @Before
@@ -26,8 +27,8 @@ public class ParkingLotSystemTest {
         parkingLot = new ParkingLot(2);
         parkingLotSystem = new ParkingLotSystem();
         lotInformer = ParkingLotInformer.getInstance();
-        vehicle =new Object();
-        vehicle1 =new Object();
+        vehicle =new Vehicle("White","Toyota","MH19 AB 2341");
+        vehicle1 =new Vehicle("Red","Swift","MH20 GH 4563");
         expectedList = new ArrayList();
         parkingLotSystem.addLot(parkingLot);
     }
@@ -70,7 +71,7 @@ public class ParkingLotSystemTest {
     //UC3
     @Test
     public void givenWhenParkingLotIsFull_ShouldInformTheOwner() {
-        Object vehicle2=new Object();
+        Vehicle vehicle2=new Vehicle();
         ParkingLotOwner owner=new ParkingLotOwner();
         lotInformer.registerParkingLotObserver(owner);
         try {
@@ -203,7 +204,7 @@ public class ParkingLotSystemTest {
     //UC9
     @Test
     public void givenVehicle_WhenParkedAtEmptySlot_ShouldReturnTrue() {
-        Object vehicle2=new Object();
+        Vehicle vehicle2=new Vehicle();
         parkingLot.setCapacity(3);
         parkingLotSystem.parkedVehicle(vehicle, DriverType.NORMAL,VehicleType.SMALL);
         parkingLotSystem.parkedVehicle(vehicle1,DriverType.NORMAL,VehicleType.SMALL);
@@ -217,7 +218,7 @@ public class ParkingLotSystemTest {
     //UC10
     @Test
     public void givenDriverTypeHandicap_WhenParkedAtEmptySlot_ShouldReturnTrue() {
-        Object vehicle2=new Object();
+        Vehicle vehicle2=new Vehicle();
         parkingLot.setCapacity(3);
         parkingLotSystem.parkedVehicle(vehicle, DriverType.NORMAL,VehicleType.SMALL);
         parkingLotSystem.parkedVehicle(vehicle1, DriverType.NORMAL,VehicleType.SMALL);
@@ -230,7 +231,7 @@ public class ParkingLotSystemTest {
 
     @Test
     public void givenDriverTypeHandicap_WhenParkedAtNearestSlot_ShouldReturnTrue() {
-        Object vehicle2=new Object();
+        Vehicle vehicle2=new Vehicle();
         parkingLot.setCapacity(3);
         parkingLotSystem.parkedVehicle(vehicle, DriverType.NORMAL,VehicleType.SMALL);
         parkingLotSystem.parkedVehicle(vehicle1, DriverType.NORMAL,VehicleType.SMALL);
@@ -258,6 +259,36 @@ public class ParkingLotSystemTest {
         parkingLotSystem.isVehicleParked(vehicle);
         int emptySlot = parkingLotSystem.findVehicle(vehicle);
         Assert.assertEquals(expectedSlot,emptySlot);
+    }
+
+    //UC12
+    @Test
+    public void givenParkingLot_WhenParkedWhiteVehicles_ShouldReturnListOfVehicles() {
+        Vehicle vehicle2 = new Vehicle("White","Swift","MH18 BN 78963");
+        expectedList.add(0);
+        expectedList.add(2);
+        parkingLot.setCapacity(3);
+        parkingLotSystem.parkedVehicle(vehicle, DriverType.NORMAL,VehicleType.SMALL);
+        parkingLotSystem.parkedVehicle(vehicle1, DriverType.NORMAL,VehicleType.SMALL);
+        parkingLotSystem.parkedVehicle(vehicle2,DriverType.NORMAL,VehicleType.SMALL);
+        ArrayList sortedVehicleList = parkingLotSystem.searchVehiclesByColour("White");
+        Assert.assertEquals(expectedList, sortedVehicleList);
+    }
+
+    @Test
+    public void givenParkingLot_WhenNoOneWhiteVehiclesParked_ShouldThrowException() {
+        Vehicle vehicle2 = new Vehicle("Red","Swift Desire","MH17 OP 98765");
+        Vehicle vehicle3 = new Vehicle("Black","Honda","MH18 BH 845621");
+        parkingLot.setCapacity(3);
+        try {
+            parkingLotSystem.parkedVehicle(vehicle1, DriverType.NORMAL, VehicleType.SMALL);
+            parkingLotSystem.parkedVehicle(vehicle2, DriverType.NORMAL, VehicleType.SMALL);
+            parkingLotSystem.parkedVehicle(vehicle3, DriverType.NORMAL, VehicleType.SMALL);
+            parkingLotSystem.searchVehiclesByColour("White");
+        }catch (ParkingLotException e)
+        {
+            Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,e.type);
+        }
     }
 
 }

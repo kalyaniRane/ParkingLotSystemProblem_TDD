@@ -1,5 +1,6 @@
 package com.bridgelabz.parkinglot.exception.mockito;
 
+import com.bridgelabz.parkinglot.Dao.Vehicle;
 import com.bridgelabz.parkinglot.ParkingLot;
 import com.bridgelabz.parkinglot.ParkingLotSystem;
 import org.junit.Assert;
@@ -9,6 +10,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import java.util.ArrayList;
+
 import static org.mockito.Mockito.*;
 
 public class TestParkingLotSystem {
@@ -19,12 +23,12 @@ public class TestParkingLotSystem {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    Object vehicle;
+    Vehicle vehicle;
     ParkingLotSystem parkingLotSystem;
 
     @Before
     public void setUp() throws Exception {
-        vehicle = new Object();
+        vehicle = new Vehicle();
         parkingLotSystem =new ParkingLotSystem();
         parkingLotSystem.addLot(parkingLot);
     }
@@ -50,5 +54,14 @@ public class TestParkingLotSystem {
         Assert.assertEquals(1,slot);
     }
 
+    @Test
+    public void testSearchVehiclesByColours() {
+        ArrayList<Integer> list=new ArrayList<>();
+        list.add(0);
+        list.add(2);
+        when(parkingLot.searchVehiclesByColour(any())).thenReturn(list);
+        ArrayList<Integer> vehiclesList = parkingLotSystem.searchVehiclesByColour("White");
+        Assert.assertEquals(list,vehiclesList);
+    }
 
 }

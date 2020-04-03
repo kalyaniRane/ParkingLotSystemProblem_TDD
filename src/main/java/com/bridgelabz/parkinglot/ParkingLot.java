@@ -1,5 +1,7 @@
 package com.bridgelabz.parkinglot;
 
+import com.bridgelabz.parkinglot.Dao.ParkingSlot;
+import com.bridgelabz.parkinglot.Dao.Vehicle;
 import com.bridgelabz.parkinglot.exception.ParkingLotException;
 
 import java.time.LocalTime;
@@ -9,7 +11,7 @@ import java.util.stream.IntStream;
 
 public class ParkingLot {
     public int actualCapacity;
-    public List<Object> vehicles;
+    public List<ParkingSlot> vehicles;
     ParkingSlot parkingSlot;
     ParkingLotInformer lotInformer;
 
@@ -41,7 +43,7 @@ public class ParkingLot {
     }
 
     //Function To Park Vehicle In ParkingLot
-    public boolean park(int emptySlot,Object vehicle) throws ParkingLotException {
+    public boolean park(int emptySlot,Vehicle vehicle) throws ParkingLotException {
         parkingSlot = new ParkingSlot(vehicle);
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("vehicle already parked",ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED);
@@ -56,14 +58,14 @@ public class ParkingLot {
     }
 
     //Function To Confirm Vehicle Is Parked or Not
-    public boolean isVehicleParked(Object vehicle) {
+    public boolean isVehicleParked(Vehicle vehicle) {
         parkingSlot = new ParkingSlot(vehicle);
         if(this.vehicles.contains(parkingSlot)) return true;
         return false;
     }
 
     //Function To UnPark Vehicle From ParkingLot
-    public boolean unPark(Object vehicle) {
+    public boolean unPark(Vehicle vehicle) {
         parkingSlot = new ParkingSlot(vehicle);
         if (this.vehicles.contains(parkingSlot)) {
             this.vehicles.set(this.vehicles.indexOf(parkingSlot), null);
@@ -73,7 +75,7 @@ public class ParkingLot {
     }
 
     //Function To Find Vehicle In ParkingLot Where It is Parked
-    public int findVehicle(Object vehicle) {
+    public int findVehicle(Vehicle vehicle) {
         parkingSlot=new ParkingSlot(vehicle);
         if(!this.vehicles.contains(parkingSlot))
             throw new ParkingLotException("Vehicle Not Present", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
@@ -81,10 +83,22 @@ public class ParkingLot {
     }
 
     //Function To Find Time Of Vehicle When It Is Park In ParkingLot
-    public LocalTime getVehicleParkedTime(Object vehicle)
+    public LocalTime getVehicleParkedTime(Vehicle vehicle)
     {
-        ParkingSlot parkingSlot=new ParkingSlot(vehicle);
+        parkingSlot=new ParkingSlot(vehicle);
         return  parkingSlot.time;
+    }
+
+    //Function To Search Vehicle By Its Colour
+    public ArrayList<Integer> searchVehiclesByColour(String colour){
+        ArrayList<Integer>vehicleList=new ArrayList<>();
+        IntStream.range(0,actualCapacity)
+                .filter(slot->vehicles.get(slot).vehicle.getColour()==colour)
+                .forEach(vehicleList::add);
+
+        if(vehicleList.isEmpty())
+            throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
+        return vehicleList;
     }
 
 }
