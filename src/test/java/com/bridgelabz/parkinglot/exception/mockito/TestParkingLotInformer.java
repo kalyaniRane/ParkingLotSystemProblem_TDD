@@ -48,9 +48,9 @@ public class TestParkingLotInformer {
                 lotInformer.getInformedObserver();
                 return true;
             }
-        }).when(parkingLot).park(0,vehicle, DriverType.HANDICAP, VehicleType.SMALL);
+        }).when(parkingLot).park(vehicle, DriverType.HANDICAP, VehicleType.SMALL);
 
-        parkingLot.park(0,vehicle,DriverType.HANDICAP,VehicleType.SMALL);
+        parkingLot.park(vehicle,DriverType.HANDICAP,VehicleType.SMALL);
         Assert.assertTrue(owner.isCapacityFull() && airportSecurity.isCapacityFull());
     }
 

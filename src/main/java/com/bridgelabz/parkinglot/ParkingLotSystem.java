@@ -1,13 +1,13 @@
 package com.bridgelabz.parkinglot;
 
 import com.bridgelabz.parkinglot.Dao.Vehicle;
+import com.bridgelabz.parkinglot.enums.VehicleSortField;
 import com.bridgelabz.parkinglot.enums.VehicleType;
 import com.bridgelabz.parkinglot.exception.ParkingLotException;
 import com.bridgelabz.parkinglot.enums.DriverType;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
 
@@ -32,16 +32,7 @@ public class ParkingLotSystem {
 
     public boolean parkedVehicle(Vehicle vehicle, DriverType driverType, VehicleType vehicleType) {
         lot = getLotHaveMaxSpace(parkingLots);
-        int emptySlot = 0;
-        try {
-            ArrayList<Integer> emptyList = driverType.getEmptyList(lot.getEmptySlotList());
-            Collections.sort(emptyList);
-            emptySlot = vehicleType.getEmptySlot(emptyList);
-            return lot.park(emptySlot, vehicle,driverType,vehicleType);
-        }catch (ParkingLotException e){
-            lot.park(emptySlot,vehicle,driverType, vehicleType);
-        }
-        throw new ParkingLotException("parkinglot is full", ParkingLotException.ExceptionType.LOT_IS_FULL);
+        return lot.park(vehicle,driverType,vehicleType);
     }
 
     public boolean unParkedVehicle(Vehicle vehicle) {
@@ -53,8 +44,7 @@ public class ParkingLotSystem {
 
     public boolean isVehicleParked(Vehicle vehicle) {
         for(ParkingLot parkingLot : parkingLots)
-            if(parkingLot.isVehicleParked(vehicle))
-                return true;
+            return parkingLot.isVehicleParked(vehicle) ;
         return false;
     }
 
@@ -70,44 +60,10 @@ public class ParkingLotSystem {
         throw new ParkingLotException("Time Not Available", ParkingLotException.ExceptionType.TIME_NOT_AVAILABLE);
     }
 
-    public ArrayList<Integer> searchVehiclesByColour(String colour){
+    public ArrayList<String> searchVehiclesByGivenFields(VehicleSortField vehicleSortField, String... field){
 
         for (ParkingLot lot: parkingLots)
-            return lot.searchVehiclesByColour(colour);
-        throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<String> searchVehiclesByNameAndByColour(String name, String colour){
-
-        for (ParkingLot lot:parkingLots)
-            return lot.searchVehiclesByNameAndByColour(name,colour);
-        throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<Integer> searchVehiclesByName(String name){
-        for (ParkingLot lot: parkingLots)
-            return lot.searchVehiclesByName(name);
-        throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<Integer> searchVehiclesWhoseParkLast30Minutes(){
-        for (ParkingLot lot:parkingLots) {
-            return lot.searchVehiclesWhoseParkLast30Minutes();
-        }
-        throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<String> searchVehicleByDriverTypeAndVehicleType(DriverType driverType , VehicleType vehicleType){
-        for (ParkingLot lot:parkingLots) {
-            return lot.searchVehicleByDriverTypeAndVehicleType(driverType,vehicleType);
-        }
-        throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
-    }
-
-    public ArrayList<String> searchAllVehicles(){
-        for (ParkingLot lot:parkingLots) {
-            return lot.searchAllVehicles();
-        }
+            return lot.searchVehiclesByGivenFields(vehicleSortField,field);
         throw new ParkingLotException("No One Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
     }
 

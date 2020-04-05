@@ -3,6 +3,7 @@ package com.bridgelabz.parkinglot.exception.mockito;
 
 import com.bridgelabz.parkinglot.Dao.Vehicle;
 import com.bridgelabz.parkinglot.ParkingLot;
+import com.bridgelabz.parkinglot.enums.VehicleSortField;
 import com.bridgelabz.parkinglot.enums.DriverType;
 import com.bridgelabz.parkinglot.enums.VehicleType;
 import com.bridgelabz.parkinglot.exception.ParkingLotException;
@@ -29,8 +30,8 @@ public class TestParkingLotException {
 
     @Test(expected = ParkingLotException.class)
     public void testExceptionClass_WhenParkFunctionCall_ShouldReturnException() {
-        doThrow(ParkingLotException.class).when(parkingLot).park(0,vehicle, driverType, vehicleType);
-        parkingLot.park(0,vehicle, driverType, vehicleType);
+        doThrow(ParkingLotException.class).when(parkingLot).park(vehicle, driverType, vehicleType);
+        parkingLot.park(vehicle, driverType, vehicleType);
     }
 
     @Test
@@ -38,15 +39,15 @@ public class TestParkingLotException {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                if (invocation.getArgument(0).equals(0)) {
+                if (invocation.getArgument(0).equals(vehicle)) {
                     throw new ParkingLotException("", ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED);
                 }
                 throw new ParkingLotException("", ParkingLotException.ExceptionType.LOT_IS_FULL);
             }
-        }).when(parkingLot).park(0,vehicle, driverType, vehicleType);
+        }).when(parkingLot).park(vehicle, driverType, vehicleType);
 
         try {
-            parkingLot.park(0,vehicle, driverType, vehicleType);
+            parkingLot.park(vehicle, driverType, vehicleType);
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_ALREADY_PARKED,e.type);
         }
@@ -62,10 +63,10 @@ public class TestParkingLotException {
                 }
                 throw new ParkingLotException("", ParkingLotException.ExceptionType.LOT_IS_FULL);
             }
-        }).when(parkingLot).park(0,vehicle, driverType, vehicleType);
+        }).when(parkingLot).park(vehicle, driverType, vehicleType);
 
         try {
-            parkingLot.park(1,vehicle, driverType, vehicleType);
+            parkingLot.park(vehicle, driverType, vehicleType);
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.LOT_IS_FULL,e.type);
         }
@@ -88,48 +89,16 @@ public class TestParkingLotException {
     }
 
     @Test
-    public void testExceptionClass_WhenVehicleNotFoundByGivenColour_ShouldReturnException() {
+    public void testExceptionClass_WhenVehicleNotFoundByGivenFields_ShouldReturnException() {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 throw new ParkingLotException("", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
             }
-        }).when(parkingLot).searchVehiclesByColour(any());
+        }).when(parkingLot).searchVehiclesByGivenFields(any(),any());
 
         try {
-            parkingLot.searchVehiclesByColour("White");
-        }catch (ParkingLotException e){
-            Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,e.type);
-        }
-    }
-
-    @Test
-    public void testExceptionClass_WhenVehicleNotFoundByGivenName_ShouldReturnException() {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                throw new ParkingLotException("", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
-            }
-        }).when(parkingLot).searchVehiclesByName(any());
-
-        try {
-            parkingLot.searchVehiclesByName("BMW");
-        }catch (ParkingLotException e){
-            Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,e.type);
-        }
-    }
-
-    @Test
-    public void testExceptionClass_WhenVehicleNotFoundByGivenNameAndColour_ShouldReturnException() {
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                throw new ParkingLotException("", ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND);
-            }
-        }).when(parkingLot).searchVehiclesByNameAndByColour(any(),any());
-
-        try {
-            parkingLot.searchVehiclesByNameAndByColour("BMW","Blue");
+            parkingLot.searchVehiclesByGivenFields(VehicleSortField.COLOUR,"White");
         }catch (ParkingLotException e){
             Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,e.type);
         }

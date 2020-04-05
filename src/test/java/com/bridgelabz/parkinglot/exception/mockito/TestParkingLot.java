@@ -42,11 +42,12 @@ public class TestParkingLot {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                parkingLot.park(any(),any(),any(),any());
+                parkingLot.park(any(),any(),any());
                 return true;
             }
         }).when(parkingLotSystem).parkedVehicle(vehicle, DriverType.HANDICAP, VehicleType.SMALL);
-        boolean vehicleParked = parkingLot.park(0,vehicle,DriverType.HANDICAP,VehicleType.SMALL);
+        boolean vehicleParked = parkingLot.park(vehicle,DriverType.HANDICAP,VehicleType.SMALL);
         Assert.assertTrue(vehicleParked);
     }
+
 }
